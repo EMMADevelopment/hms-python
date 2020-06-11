@@ -6,6 +6,7 @@ Basic Usage
 -----------
 
 ```python
+import asyncio
 from hms.connection import HmsConnection
 from hms.models import AndroidNotification
 from hms.exceptions import ApiCallError
