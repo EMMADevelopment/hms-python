@@ -33,5 +33,5 @@ async def main():
   await connection.close()
 
 loop = asyncio.get_event_loop()
-loop.run_until_complete(run())
+loop.run_until_complete(main())
  ```
