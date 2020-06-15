@@ -16,22 +16,23 @@ async def main():
   app_id = 1234567
   secret = "<APP_SECRET>"
   connection = HmsConnection(app_id, secret)
-  await connection.connect()
+  connected = await connection.connect()
+  
+  if connected:
+    notification={
+      "title": "Hello world hcm",
+      "body": "This is notification body",
+      "sound": "default"
+    }
+    message = AndroidNotification(token=["<TOKEN>"],
+                                       collapse_key=-1,
+                                       ttl='86400s',
+                                       priority=AndroidNotification.PRIORITY_HIGH,
+                                       notification=notification
+                                       )
 
-  notification={
-    "title": "Hello world hcm",
-    "body": "This is notification body",
-    "sound": "default"
-  }
-  message = AndroidNotification(token=["<TOKEN>"],
-                                     collapse_key=-1,
-                                     ttl='86400s',
-                                     priority=AndroidNotification.PRIORITY_HIGH,
-                                     notification=notification
-                                     )
-
-  await connection.send_message(message)
-  await connection.close()
+    await connection.send_message(message)
+    await connection.close()
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
