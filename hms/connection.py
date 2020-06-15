@@ -26,10 +26,11 @@ class HmsConnection(object):
         self.push_server_url = self.push_open_url + "/v1/{0}/messages:send"
         self.request_session = None  # type: Optional[ClientSession]
 
-    async def connect(self):
+    async def connect(self) -> bool:
         timeout_client = ClientTimeout(total=self.timeout)
         self.request_session = ClientSession(timeout=timeout_client)
-        await self._update_token()
+        result, reason = await self._update_token()
+        return result
 
     async def close(self):
         if self.request_session:
@@ -69,7 +70,6 @@ class HmsConnection(object):
 
     async def _update_token(self):
         if self._is_token_expired() is True:
-            print('Token expired')
             result, reason = await self._refresh_token()
             if result is False:
                 raise ApiCallError(reason)
@@ -87,8 +87,6 @@ class HmsConnection(object):
         msg_body_dict = dict()
         msg_body_dict['validate_only'] = validate_only
         msg_body_dict['message'] = message.as_dict()
-
-        print(message.as_dict())
 
         return await self._send_to_server(headers, msg_body_dict, url)
 
