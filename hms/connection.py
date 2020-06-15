@@ -29,8 +29,7 @@ class HmsConnection(object):
     async def connect(self) -> bool:
         timeout_client = ClientTimeout(total=self.timeout)
         self.request_session = ClientSession(timeout=timeout_client)
-        result, reason = await self._update_token()
-        return result
+        return await self._update_token()
 
     async def close(self):
         if self.request_session:
@@ -71,8 +70,8 @@ class HmsConnection(object):
     async def _update_token(self):
         if self._is_token_expired() is True:
             result, reason = await self._refresh_token()
-            if result is False:
-                raise ApiCallError(reason)
+            return result
+        return True
 
     def _create_header(self):
         headers = dict()
@@ -105,7 +104,7 @@ class HmsConnection(object):
 
     async def post(self, url, req_body, headers=None):
         try:
-            async with self.request_session.post(url, data=req_body, headers=headers, ) as response:
+            async with self.request_session.post(url, data=req_body, headers=headers) as response:
                 res_text = await response.text()
                 return response.status, res_text
         except Exception as e:
