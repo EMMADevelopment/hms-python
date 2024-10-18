@@ -29,7 +29,7 @@ setuptools.setup(
     python_requires='>=3.6',
     install_requires=[
         'aiohttp>=3.6.2',
-        'cchardet>=2.1.6',
+        'chardet==5.2.0',
         'aiodns>=2.0.0',
         'brotlipy>=0.7',
         'urllib3>=1.0.0',
